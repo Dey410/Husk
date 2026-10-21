@@ -103,6 +103,7 @@
 		60DF5AC57C0225BEE8C9FB3A /* icon-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = EA7240C2BD49C9F0CF7CB3DF /* icon-dark.png */; };
 		61B170D2F117D85F651CD6E6 /* icon-cleardark.png in Resources */ = {isa = PBXBuildFile; fileRef = E3A701AA76E485A6CE15F106 /* icon-cleardark.png */; };
 		622DA3EB6E956A9ED06CF55C /* husk-tl-probe.c in Sources */ = {isa = PBXBuildFile; fileRef = E4D1C81CB49D39A7D865A0DA /* husk-tl-probe.c */; };
+		66067DD03C99969CE47038F2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 7D060CA77FBF8A9F33B77A37 /* Localizable.xcstrings */; };
 		6A8A2290222C62C81EBF2E3E /* husk-tl-bionic-pthread.c in Sources */ = {isa = PBXBuildFile; fileRef = C2150DD286E82127CB5B7C8B /* husk-tl-bionic-pthread.c */; };
 		6CA4A4E301BCB015E19AF7A8 /* AppWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8F4838EC0E68E364143E79 /* AppWindows.swift */; };
 		6EE0DCCC80014D645AC6E23A /* Geode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9736391C1BCE43667293DB7B /* Geode.swift */; };
@@ -115,7 +116,6 @@
 		7CA02F2FB22207E86499451E /* DownloadsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2F367C3774A342D33D245F /* DownloadsWidget.swift */; };
 		7EF41C59B3AF51A4E96F20E0 /* fishhook.c in Sources */ = {isa = PBXBuildFile; fileRef = CC860BD7A5AF9DC83B015219 /* fishhook.c */; };
 		7EFCE4A5CC3A0F9298535EF0 /* JITLess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1791A63C016A301CFCCFB41 /* JITLess.swift */; };
-		7F4F03D8314FE02DAA0314FE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71CC0BAF2D79C1922A12E02A /* Localizable.strings */; };
 		7FA5D73DC2780CACC7399534 /* BundleUnpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E37298010F80517A3057579E /* BundleUnpacker.swift */; };
 		80C126C7BDB5EE56A7139C20 /* husk-tl-audio.c in Sources */ = {isa = PBXBuildFile; fileRef = 463C342B38F6BF37752F4E72 /* husk-tl-audio.c */; };
 		80D3E838D7A84B6F82A5BA68 /* husk-tl-jni-tls.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A03EC803ECECBFCA11026AF /* husk-tl-jni-tls.c */; };
@@ -134,6 +134,7 @@
 		8CA6BE4E0A271053E40DA9BA /* AppDiagnosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9651633AB1B5F444EB71B286 /* AppDiagnosis.swift */; };
 		8DBD7C748F519C3321EC0E98 /* WebApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD91E5537023860BD27A855 /* WebApp.swift */; };
 		8E10E866080B28D4D397970A /* HuskGLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F337AAF2A6860FCB03810AA6 /* HuskGLView.swift */; };
+		8FDD4D8A94E3F1655DA01783 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3EDA118800A01CE34EDBC398 /* Localizable.xcstrings */; };
 		945DD86A7A210B74B2C7FF17 /* TLScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDBC0AF7BE5742AA867515 /* TLScreenView.swift */; };
 		9883B80CE2F3C84E5D6E0A8F /* husk-tl-elf.c in Sources */ = {isa = PBXBuildFile; fileRef = D08FCD7F480D6E2F65F26636 /* husk-tl-elf.c */; };
 		9E3948EF967C2A0773C521DD /* husk-tl-jni-assetstream.c in Sources */ = {isa = PBXBuildFile; fileRef = FD6B5A72980D1EC374BFC326 /* husk-tl-jni-assetstream.c */; };
@@ -145,6 +146,7 @@
 		A687EB34AE28E4CBBA4136BF /* husk-tl-geode.c in Sources */ = {isa = PBXBuildFile; fileRef = 9235AEC134C86769DDF7E880 /* husk-tl-geode.c */; };
 		A6EEA5B31AF4AC4AA056F674 /* husk-tl-dvm-sqlite.c in Sources */ = {isa = PBXBuildFile; fileRef = DC6A345F190285ADF810B168 /* husk-tl-dvm-sqlite.c */; };
 		A7FBE49898024C7B1D03E018 /* husk-tl-sound.c in Sources */ = {isa = PBXBuildFile; fileRef = 91DE2675795B851A4C47ED9E /* husk-tl-sound.c */; };
+		A9E109EC6075A61B2B7E74DE /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F32D9806ADF6A69A331563B6 /* InfoPlist.xcstrings */; };
 		AAF3739690794B605F5D7CAE /* husk-tl-dexindex.c in Sources */ = {isa = PBXBuildFile; fileRef = AA12F6AB59959C0162BB8928 /* husk-tl-dexindex.c */; };
 		AC5C07974C7A8658358A55C9 /* husk-tl-a64.c in Sources */ = {isa = PBXBuildFile; fileRef = 3ADCEA1477DA816D867C1EBB /* husk-tl-a64.c */; };
 		AFB5E3E73BFA43BA50428CF6 /* husk-tl-dvm-graphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 3B4754DCDA6CFFE02F854C6A /* husk-tl-dvm-graphics.c */; };
@@ -210,7 +212,6 @@
 		FC45D56054E524839BB0C555 /* husk-tl-gamemaker.c in Sources */ = {isa = PBXBuildFile; fileRef = 95865DA863ED1D2635023E54 /* husk-tl-gamemaker.c */; };
 		FC8F2E79EF7CDBC99D95F4F6 /* husk-tl-jni-input.c in Sources */ = {isa = PBXBuildFile; fileRef = 28152D0874B73915225FE8EA /* husk-tl-jni-input.c */; };
 		FCC98727BBE825F227BA85DC /* husk-tl-prefs.c in Sources */ = {isa = PBXBuildFile; fileRef = 86A6E743652A606829BC044B /* husk-tl-prefs.c */; };
-		FF486702C6D33BA45B29F232 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FE1883A8008B6E8BF4D83155 /* InfoPlist.strings */; };
 		FF9CF33CB5846E7DF6189EB9 /* husk-tl-dvm-annotations.c in Sources */ = {isa = PBXBuildFile; fileRef = 65972F9D6806424034E38589 /* husk-tl-dvm-annotations.c */; };
 /* End PBXBuildFile section */
 
@@ -324,6 +325,7 @@
 		3B72237F810FCE0EE433FA3D /* husk-tl-nativeactivity.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-nativeactivity.c"; sourceTree = "<group>"; };
 		3B9FC5A63D4CAA7FBDA016EB /* fishhook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fishhook.h; sourceTree = "<group>"; };
 		3BDB1E8EEE64E1BBF7D72E2B /* Compatibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compatibility.swift; sourceTree = "<group>"; };
+		3EDA118800A01CE34EDBC398 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		3F25C8D085028063DE39D3F2 /* husk-tl-jni-audiotrack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-jni-audiotrack.c"; sourceTree = "<group>"; };
 		3F5C62F392C6EE9D6F1B9407 /* AppClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClip.swift; sourceTree = "<group>"; };
 		40BF573E8CED9B238E762BA6 /* FilesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesTab.swift; sourceTree = "<group>"; };
@@ -386,7 +388,6 @@
 		6F40192B3EDAD27D2CBFFC2F /* BootScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootScreen.swift; sourceTree = "<group>"; };
 		7087E37F05675CE3FD4EDEE2 /* ItemPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPages.swift; sourceTree = "<group>"; };
 		7104A621330A81BD69495520 /* husk-tl-internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "husk-tl-internal.h"; sourceTree = "<group>"; };
-		71CC0BAF2D79C1922A12E02A /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		71DD2E2A2A0B0AB86EE783DD /* Compat15.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compat15.swift; sourceTree = "<group>"; };
 		766F6F7816E672E83CFFE47D /* PipeShim.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PipeShim.c; sourceTree = "<group>"; };
 		771B4FD56CABC214FEED6DFE /* GuestImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestImage.swift; sourceTree = "<group>"; };
@@ -396,6 +397,7 @@
 		7AD4F32F70E9594D17CB047B /* husk-tl-dvm-natives.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-dvm-natives.c"; sourceTree = "<group>"; };
 		7B5E2D3E9F12A2A3BB5BBDC7 /* husk-tl-gtasa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "husk-tl-gtasa.h"; sourceTree = "<group>"; };
 		7CC582FAC1F17C1C659C9D47 /* husk-tl-bionic-io.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-bionic-io.c"; sourceTree = "<group>"; };
+		7D060CA77FBF8A9F33B77A37 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		7F8AFBCC1E9A402444C2D1E6 /* husk-tl-bionic-net.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-bionic-net.c"; sourceTree = "<group>"; };
 		7FD8DC66414547110F0E0B0E /* husk-tl-res.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-res.c"; sourceTree = "<group>"; };
 		7FE5D3DD79B5BEA14506FF60 /* husk-tl-dex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-dex.c"; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 		EF3D8E6CDB847AE182E15208 /* husk-console-host.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-console-host.c"; sourceTree = "<group>"; };
 		EF6C1917FEC08090833D9CF0 /* JITPairing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JITPairing.swift; sourceTree = "<group>"; };
 		F13D91C39BBC9C52E70E1520 /* husk-tl-dexindex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "husk-tl-dexindex.h"; sourceTree = "<group>"; };
+		F32D9806ADF6A69A331563B6 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		F337AAF2A6860FCB03810AA6 /* HuskGLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HuskGLView.swift; sourceTree = "<group>"; };
 		F3FEAD390092357A2CCDCB7E /* DownloadsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsTab.swift; sourceTree = "<group>"; };
 		F44A2196AA5F6271BF893660 /* libFilePickerFix.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libFilePickerFix.dylib; path = Frameworks/libFilePickerFix.dylib; sourceTree = "<group>"; };
@@ -511,7 +514,6 @@
 		FD6B5A72980D1EC374BFC326 /* husk-tl-jni-assetstream.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-jni-assetstream.c"; sourceTree = "<group>"; };
 		FDF944ADD896E0A8B1E40965 /* husk-tl-gamemaker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "husk-tl-gamemaker.h"; sourceTree = "<group>"; };
 		FE13DC571D193621CD6149EA /* HuskGamepad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HuskGamepad.swift; sourceTree = "<group>"; };
-		FE1883A8008B6E8BF4D83155 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = InfoPlist.strings; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		FE8922E7AB75C8C61B37986A /* husk-tl-jni-loop.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-jni-loop.c"; sourceTree = "<group>"; };
 		FF32BE604D93D4757E99BAF0 /* husk-console-host.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "husk-console-host.h"; sourceTree = "<group>"; };
 		FF5A120A4E0B3EE166D789C4 /* husk-tl-bionic-ndk.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "husk-tl-bionic-ndk.c"; sourceTree = "<group>"; };
@@ -588,7 +590,7 @@
 				6B377713385E7AA354D112E6 /* ImportView.swift */,
 				E6B56E33761AC40E5BEA6BE9 /* IncomingFiles.swift */,
 				FD559A37CF59C3290F29FA43 /* Info.plist */,
-				FE1883A8008B6E8BF4D83155 /* InfoPlist.strings */,
+				F32D9806ADF6A69A331563B6 /* InfoPlist.xcstrings */,
 				7087E37F05675CE3FD4EDEE2 /* ItemPages.swift */,
 				5664FE015975D16E7500F3C7 /* JITBootstrap.swift */,
 				43C233A62FB57030C0818489 /* JITBuiltIn.swift */,
@@ -598,7 +600,7 @@
 				83275C7FEF2DEB950028D914 /* JITSetup.swift */,
 				5894E74BA308222C01AEE311 /* JITSetupView.swift */,
 				6829A7DBA27EDCC20D8C17AD /* Launcher.swift */,
-				71CC0BAF2D79C1922A12E02A /* Localizable.strings */,
+				7D060CA77FBF8A9F33B77A37 /* Localizable.xcstrings */,
 				2470C9D4EBE84F890D35A354 /* MassTest.swift */,
 				79E4865C5FE44ADD210A4917 /* OnboardingView.swift */,
 				766F6F7816E672E83CFFE47D /* PipeShim.c */,
@@ -824,6 +826,7 @@
 				DC2F367C3774A342D33D245F /* DownloadsWidget.swift */,
 				DD3AA162B82B50B7D4B5F5C4 /* Info.plist */,
 				842013BDA83BE54C1FAFA038 /* InfoPlist.strings */,
+				3EDA118800A01CE34EDBC398 /* Localizable.xcstrings */,
 			);
 			path = HuskDownloadsWidget;
 			sourceTree = "<group>";
@@ -1007,6 +1010,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D878FC724202189719EDC9A /* InfoPlist.strings in Resources */,
+				8FDD4D8A94E3F1655DA01783 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1015,11 +1019,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				38A9F59D462DE5A28D3F579D /* Assets.xcassets in Resources */,
-				FF486702C6D33BA45B29F232 /* InfoPlist.strings in Resources */,
+				A9E109EC6075A61B2B7E74DE /* InfoPlist.xcstrings in Resources */,
 				FA8097D8E118A8CE8DBCF763 /* LICENSE-StikJIT-MPL-2.0.txt in Resources */,
 				DD78A64F53CD2C615EB004B3 /* LICENSE-idevice-MIT.txt in Resources */,
 				1D576C7E088182B888F811BB /* LICENSES-rppairing-crates.txt in Resources */,
-				7F4F03D8314FE02DAA0314FE /* Localizable.strings in Resources */,
+				66067DD03C99969CE47038F2 /* Localizable.xcstrings in Resources */,
 				50A3A90912B5C9D90B87D9BF /* cacert.pem in Resources */,
 				E2C01F517E73992A29E22EC2 /* husk-jit.js in Resources */,
 				7A7A40B3B76C8BA2D7262907 /* husk-tl-egl-es31.inc in Resources */,
@@ -1532,12 +1536,14 @@
 				HUSK_BUNDLE_IDENTIFIER = com.husk.app;
 				HUSK_ENTITLEMENTS = Husk/Husk.entitlements;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 			};
@@ -1599,12 +1605,14 @@
 				HUSK_BUNDLE_IDENTIFIER = com.husk.app;
 				HUSK_ENTITLEMENTS = Husk/Husk.entitlements;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 			};

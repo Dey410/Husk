@@ -30,13 +30,24 @@ struct LabeledContent<Label: View, Content: View>: View {
     }
 }
 
+// As SwiftUI's own: a literal title is looked up in the string catalog, a String one is shown as it is.
 extension LabeledContent where Label == Text, Content == Text {
+    init<Value: StringProtocol>(_ titleKey: LocalizedStringKey, value: Value) {
+        self.init(content: { Text(value) }, label: { Text(titleKey) })
+    }
+
+    @_disfavoredOverload
     init<Title: StringProtocol, Value: StringProtocol>(_ title: Title, value: Value) {
         self.init(content: { Text(value) }, label: { Text(title) })
     }
 }
 
 extension LabeledContent where Label == Text {
+    init(_ titleKey: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+        self.init(content: content, label: { Text(titleKey) })
+    }
+
+    @_disfavoredOverload
     init<Title: StringProtocol>(_ title: Title, @ViewBuilder content: () -> Content) {
         self.init(content: content, label: { Text(title) })
     }

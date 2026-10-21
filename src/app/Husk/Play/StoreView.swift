@@ -42,7 +42,7 @@ struct StoreView: View {
                     if manager.isSignedIn {
                         Menu {
                             if let s = manager.session {
-                                Text(s.isAnonymous ? "Guest Account (Aurora)" : s.email)
+                                Text(s.isAnonymous ? String(localized: "Guest Account (Aurora)") : s.email)
                                     .font(.caption)
                                 if s.isAnonymous {
                                     Text(s.email).font(.caption2).foregroundStyle(.secondary)
@@ -133,7 +133,7 @@ struct StoreView: View {
             if manager.isLoading {
                 VStack(spacing: 12) {
                     ProgressView()
-                    Text(manager.statusMessage ?? "Signing in…")
+                    Text(manager.statusMessage ?? String(localized: "Signing in…"))
                         .font(.footnote)
                         .foregroundStyle(Theme.textDim)
                 }
@@ -476,9 +476,9 @@ enum StoreShelf: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .featured: return "Featured"
-        case .games: return "Games"
-        case .apps: return "Apps"
+        case .featured: return String(localized: "Featured")
+        case .games: return String(localized: "Games")
+        case .apps: return String(localized: "Apps")
         }
     }
 }

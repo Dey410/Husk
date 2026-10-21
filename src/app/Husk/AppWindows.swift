@@ -195,10 +195,10 @@ private struct AppWindow: View {
 
     private var titleBar: some View {
         HStack(spacing: 8) {
-            light(.red, "xmark", "Close") { windows.close() }
-            light(.yellow, "minus", "Minimise") { windows.minimize() }
+            light(.red, "xmark", String(localized: "Close")) { windows.close() }
+            light(.yellow, "minus", String(localized: "Minimise")) { windows.minimize() }
             light(.green, windows.maximized ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right",
-                  windows.maximized ? "Restore" : "Maximise") { windows.toggleMaximized() }
+                  windows.maximized ? String(localized: "Restore") : String(localized: "Maximise")) { windows.toggleMaximized() }
             Spacer(minLength: 6)
             if app.screenEngine == .flutter || app.report?.webKind != nil {
                 Button { if app.report?.webKind != nil { WebAppRuntime.runtime(for: app)?.back() } else { husk_flutter_back() } } label: {

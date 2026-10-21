@@ -104,17 +104,17 @@ private struct DownloadRow: View {
     private var fraction: Double { job.total > 0 ? min(1, Double(job.received) / Double(job.total)) : 0 }
 
     private var status: String {
-        if job.complete { return job.kind == .apk ? "Added to the library" : job.kind == .folder ? "In Shared Storage" : "In Shared Storage" }
-        if job.paused { return "Paused · \(Downloads.bytes(job.received)) of \(Downloads.bytes(job.total))" }
-        if let err = job.files.first(where: { $0.error != nil })?.error { return "Stopped: \(err)" }
-        var s = "\(Downloads.bytes(job.received)) of \(Downloads.bytes(job.total))"
-        if job.files.count > 1 { s += " · \(job.filesDone)/\(job.files.count) files" }
+        if job.complete { return job.kind == .apk ? String(localized: "Added to the library") : job.kind == .folder ? String(localized: "In Shared Storage") : String(localized: "In Shared Storage") }
+        if job.paused { return String(localized: "Paused · \(Downloads.bytes(job.received)) of \(Downloads.bytes(job.total))") }
+        if let err = job.files.first(where: { $0.error != nil })?.error { return String(localized: "Stopped: \(err)") }
+        var s = String(localized: "\(Downloads.bytes(job.received)) of \(Downloads.bytes(job.total))")
+        if job.files.count > 1 { s += String(localized: " · \(job.filesDone)/\(job.files.count) files") }
         if speed > 1 {
             s += " · \(Downloads.bytes(Int64(speed)))/s"
             let left = Double(job.total - job.received) / speed
             if left.isFinite, left > 0 {
                 let f = DateComponentsFormatter(); f.allowedUnits = left > 3600 ? [.hour, .minute] : [.minute, .second]; f.unitsStyle = .abbreviated
-                if let t = f.string(from: left) { s += " · \(t) left" }
+                if let t = f.string(from: left) { s += String(localized: " · \(t) left") }
             }
         }
         return s

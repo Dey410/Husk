@@ -127,7 +127,7 @@ struct AppDetailView: View {
             Section {
                 LabeledContent("Version", value: live.version ?? "—")
                 LabeledContent("Size", value: live.sizeBytes.map(Self.bytes) ?? "—")
-                LabeledContent("Last Used", value: live.lastUsed.map(Self.when) ?? "Never from Husk")
+                LabeledContent("Last Used", value: live.lastUsed.map(Self.when) ?? String(localized: "Never from Husk"))
             }
 
             Section {
@@ -156,8 +156,7 @@ struct AppDetailView: View {
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("Its data goes with it. Save Android afterwards or the change is "
-               + "lost on the next launch.")
+            Text("Its data goes with it. Save Android afterwards or the change is lost on the next launch.")
         }
     }
 
@@ -224,10 +223,11 @@ struct AppDetailView: View {
 
     static func when(_ date: Date) -> String {
         let f = DateFormatter()
-        if Calendar.current.isDateInToday(date) {
-            f.dateFormat = "'Today,' h:mm a"
-        } else if Calendar.current.isDateInYesterday(date) {
-            f.dateFormat = "'Yesterday,' h:mm a"
+        if Calendar.current.isDateInToday(date) || Calendar.current.isDateInYesterday(date) {
+            // "Today, 9:41 AM", in the app's language
+            f.doesRelativeDateFormatting = true
+            f.dateStyle = .medium
+            f.timeStyle = .short
         } else {
             f.dateStyle = .medium
             f.timeStyle = .none

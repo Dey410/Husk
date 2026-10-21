@@ -187,7 +187,7 @@ struct OnboardingView: View {
         }
     }
 
-    private func header(_ symbol: String, _ title: String, _ subtitle: String) -> some View {
+    private func header(_ symbol: String, _ title: LocalizedStringKey, _ subtitle: LocalizedStringKey) -> some View {
         VStack(spacing: 12) {
             Image(systemName: symbol)
                 .font(.system(size: 50, weight: .regular))
@@ -225,7 +225,7 @@ struct OnboardingView: View {
     }
 
     /// A list to choose one from, searchable, with the choice ticked.
-    private func picker(symbol: String, title: String, subtitle: String, rows: [SetupChoice],
+    private func picker(symbol: String, title: LocalizedStringKey, subtitle: LocalizedStringKey, rows: [SetupChoice],
                         selection: Binding<String>) -> some View {
         let shown = rows.filter { matches(query, $0.name, $0.id) }
         return VStack(spacing: 16) {
@@ -293,8 +293,10 @@ struct OnboardingView: View {
                 .huskCard()
 
                 choice(icon: "bolt.fill", title: "Start Android When Husk Opens",
-                       detail: "Off by default. The full Android emulator is experimental: starting it on launch can cause unwanted "
-                             + "bugs, freezes and crashes, and slows every launch. Games and apps don't need it.",
+                       detail: """
+                               Off by default. The full Android emulator is experimental: starting it on launch can cause unwanted \
+                               bugs, freezes and crashes, and slows every launch. Games and apps don't need it.
+                               """,
                        isOn: $autoStart, caution: true)
                 choice(icon: "rectangle.landscape.rotate", title: "Landscape Android Screen",
                        detail: "For the Android emulator: games fill a landscape screen, portrait apps get letterboxed.",
@@ -311,7 +313,7 @@ struct OnboardingView: View {
         }
     }
 
-    private func choice(icon: String, title: String, detail: String, isOn: Binding<Bool>, caution: Bool = false) -> some View {
+    private func choice(icon: String, title: LocalizedStringKey, detail: LocalizedStringKey, isOn: Binding<Bool>, caution: Bool = false) -> some View {
         HStack(alignment: .top, spacing: 14) {
             Image(systemName: caution ? "exclamationmark.triangle.fill" : icon)
                 .font(.system(size: 16, weight: .semibold))
@@ -331,12 +333,12 @@ struct OnboardingView: View {
 
     /// What the JIT page says is already in place, if anything.
     private var jitState: String? {
-        if JITBootstrap.ready { return "JIT is on." }
-        if jit.method == .stikDebug { return "Husk will use StikDebug." }
-        if jit.method == .trollStore { return "Husk will use TrollStore." }
+        if JITBootstrap.ready { return String(localized: "JIT is on.") }
+        if jit.method == .stikDebug { return String(localized: "Husk will use StikDebug.") }
+        if jit.method == .trollStore { return String(localized: "Husk will use TrollStore.") }
         switch jit.pairingSource {
-        case .onDevice: return "Paired on this device."
-        case .imported: return "Pairing file imported."
+        case .onDevice: return String(localized: "Paired on this device.")
+        case .imported: return String(localized: "Pairing file imported.")
         case nil: return nil
         }
     }
@@ -344,8 +346,10 @@ struct OnboardingView: View {
     private var jitPage: some View {
         VStack(spacing: 18) {
             header("bolt.fill", "Turn On JIT",
-                   "Games need JIT, which iOS only grants to an attached debugger. StikJIT is built into Husk and turns it on from "
-                 + "inside the app, with no computer. StikDebug and TrollStore work too.")
+                   """
+                   Games need JIT, which iOS only grants to an attached debugger. StikJIT is built into Husk and turns it on from \
+                   inside the app, with no computer. StikDebug and TrollStore work too.
+                   """)
             if let state = jitState {
                 Label(state, systemImage: "checkmark.circle.fill")
                     .font(.callout.weight(.medium)).foregroundStyle(.green)
@@ -383,23 +387,31 @@ struct OnboardingView: View {
         }
     }
 
-    private struct TourCard { let symbol: String; let title: String; let text: String }
+    private struct TourCard { let symbol: String; let title: LocalizedStringKey; let text: LocalizedStringKey }
 
     private static let tour: [TourCard] = [
         TourCard(symbol: "house.fill", title: "Home",
-                 text: "Your games on a shelf, the last one played first. Tap a game to pick it and its artwork fills the screen; tap it "
-                     + "again, or press Play, to start it. The ⋯ button has its settings and more."),
+                 text: """
+                       Your games on a shelf, the last one played first. Tap a game to pick it and its artwork fills the screen; tap it \
+                       again, or press Play, to start it. The ⋯ button has its settings and more.
+                       """),
         TourCard(symbol: "square.grid.2x2.fill", title: "Library",
-                 text: "Everything you have added, by platform. Use All, Android and PS4 to filter, search by name, and long-press any "
-                     + "game for its options. The dot shows how it runs: green plays, orange opens, red is broken."),
+                 text: """
+                       Everything you have added, by platform. Use All, Android and PS4 to filter, search by name, and long-press any \
+                       game for its options. The dot shows how it runs: green plays, orange opens, red is broken.
+                       """),
         TourCard(symbol: "plus.circle.fill", title: "Adding Games",
-                 text: "Tap + to add an Android APK or bundle (.xapk, .apkm, .apks), or a PS4 game: a fake package (.pkg), a folder of "
-                     + "them, or an extracted game folder. You can also share files to Husk from Files or Safari."),
+                 text: """
+                       Tap + to add an Android APK or bundle (.xapk, .apkm, .apks), or a PS4 game: a fake package (.pkg), a folder of \
+                       them, or an extracted game folder. You can also share files to Husk from Files or Safari.
+                       """),
         TourCard(symbol: "cart.fill", title: "Store",
                  text: "Browse and download Android apps from Google Play, with a guest account or your own, and see how each runs in Husk."),
         TourCard(symbol: "bolt.fill", title: "Settings & JIT",
-                 text: "Games need JIT. Turn it on from Home or Settings › JIT & Sideload. Settings also has performance, appearance, "
-                     + "input, and the optional full Android emulator."),
+                 text: """
+                       Games need JIT. Turn it on from Home or Settings › JIT & Sideload. Settings also has performance, appearance, \
+                       input, and the optional full Android emulator.
+                       """),
         TourCard(symbol: "questionmark.circle.fill", title: "Help",
                  text: "Stuck? Settings › Help answers the common problems, and a game that crashes Husk leaves a report to share."),
     ]

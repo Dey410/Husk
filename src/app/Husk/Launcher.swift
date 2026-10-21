@@ -97,8 +97,8 @@ enum LibraryItem: Identifiable, Hashable {
         guard let date = lastUsed else { return nil }
         let rel = RelativeDateTimeFormatter()
         rel.unitsStyle = .full
-        let ago = date.timeIntervalSinceNow > -60 ? "just now" : rel.localizedString(for: date, relativeTo: Date())
-        return (isGame ? "Played " : "Opened ") + ago
+        let ago = date.timeIntervalSinceNow > -60 ? String(localized: "just now") : rel.localizedString(for: date, relativeTo: Date())
+        return isGame ? String(localized: "Played \(ago)") : String(localized: "Opened \(ago)")
     }
 }
 
@@ -108,9 +108,9 @@ enum LibraryFilter: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .all: return "All"
-        case .games: return "Games"
-        case .apps: return "Apps"
+        case .all: return String(localized: "All")
+        case .games: return String(localized: "Games")
+        case .apps: return String(localized: "Apps")
         }
     }
 }
@@ -341,7 +341,7 @@ private struct RecentlyPlayedCard: View {
                             .frame(width: 46, height: 46)
                             .background(Color.white, in: Circle())
                     }
-                    .accessibilityLabel((item.isGame ? "Play " : "Open ") + item.title)
+                    .accessibilityLabel(item.isGame ? String(localized: "Play \(item.title)") : String(localized: "Open \(item.title)"))
                 }
                 .padding(16)
             }
@@ -589,7 +589,7 @@ private struct JITNotice: View {
                         .foregroundStyle(.orange)
                     VStack(alignment: .leading, spacing: 1) {
                         Text("JIT is off").font(.system(size: 14, weight: .semibold)).foregroundStyle(.white)
-                        Text(jit.busy ? (jit.status ?? "Turning on…") : "Games need it. Tap to turn it on.")
+                        Text(jit.busy ? (jit.status ?? String(localized: "Turning on…")) : String(localized: "Games need it. Tap to turn it on."))
                             .font(.system(size: 12)).foregroundStyle(Console.textDim).lineLimit(1)
                     }
                     Spacer(minLength: 0)
@@ -627,11 +627,11 @@ private struct DownloadsNotice: View {
             let total = running.reduce(Int64(0)) { $0 + $1.total }
             let got = running.reduce(Int64(0)) { $0 + $1.received }
             let pct = total > 0 ? " · \(Int(Double(got) / Double(total) * 100))%" : ""
-            return "\(running.count) downloading\(pct)"
+            return String(localized: "\(running.count) downloading\(pct)")
         }
-        if downloads.jobs.contains(where: \.failed) { return "A download failed" }
-        if let release = updates.available { return "Husk \(release.version) is out" }
-        if guest.update.isSomething { return "Android update ready" }
+        if downloads.jobs.contains(where: \.failed) { return String(localized: "A download failed") }
+        if let release = updates.available { return String(localized: "Husk \(release.version) is out") }
+        if guest.update.isSomething { return String(localized: "Android update ready") }
         return nil
     }
 
@@ -670,9 +670,11 @@ private struct WelcomeCard: View {
                 Text("Add your first game")
                     .font(.system(size: 26, weight: .heavy))
                     .foregroundStyle(Console.text)
-                Text("Pick an APK or a bundle (.xapk, .apkm, .apks), or share one to Husk from Files or Safari. Games run "
-                   + "straight on your iPhone. Other apps run inside Android. PS4 games are extracted folders put in "
-                   + "Husk's PS4 Games folder.")
+                Text("""
+                     Pick an APK or a bundle (.xapk, .apkm, .apks), or share one to Husk from Files or Safari. Games run \
+                     straight on your iPhone. Other apps run inside Android. PS4 games are extracted folders put in \
+                     Husk's PS4 Games folder.
+                     """)
                     .font(.subheadline)
                     .foregroundStyle(Console.textDim)
                     .fixedSize(horizontal: false, vertical: true)
@@ -857,12 +859,12 @@ struct LibraryScreen: View {
     }
 
     @ViewBuilder
-    private func section(_ title: String, _ items: [LibraryItem], empty: String?) -> some View {
+    private func section(_ title: LocalizedStringKey, _ items: [LibraryItem], empty: LocalizedStringKey?) -> some View {
         if !items.isEmpty || empty != nil {
             VStack(alignment: .leading, spacing: 14) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Text(title).font(.system(size: 21, weight: .bold)).foregroundStyle(Console.text)
-                    Text("\(items.count)").font(.system(size: 15, weight: .medium)).foregroundStyle(Console.textDim)
+                    Text(verbatim: "\(items.count)").font(.system(size: 15, weight: .medium)).foregroundStyle(Console.textDim)
                 }
                 if items.isEmpty, let empty {
                     Text(empty)
@@ -899,12 +901,12 @@ struct LibraryScreen: View {
         switch item {
         case .game(let g):
             if g.packageName == GeodeSupport.launcherPackage { return "Geode" }
-            return g.report?.canRun == true ? nil : "May not run"
+            return g.report?.canRun == true ? nil : String(localized: "May not run")
         case .android:
-            if AndroidHost.shared.isReady { return "Running" }
-            return guest.state == .ready ? nil : "Not installed"
-        case .app: return "Emulator"
-        case .ps4: return PS4Store.available ? nil : "Needs iOS 17.4"
+            if AndroidHost.shared.isReady { return String(localized: "Running") }
+            return guest.state == .ready ? nil : String(localized: "Not installed")
+        case .app: return String(localized: "Emulator")
+        case .ps4: return PS4Store.available ? nil : String(localized: "Needs iOS 17.4")
         }
     }
 }
@@ -1074,11 +1076,14 @@ private struct RemoveItemDialog: ViewModifier {
             }
     }
 
-    private var removeVerb: String { if case .app = item { return "Uninstall" }; return "Remove" }
-    private var removeTitle: String { "\(removeVerb) \(item.title)?" }
+    private var removeVerb: String { if case .app = item { return String(localized: "Uninstall") }; return String(localized: "Remove") }
+    private var removeTitle: String {
+        if case .app = item { return String(localized: "Uninstall \(item.title)?") }
+        return String(localized: "Remove \(item.title)?")
+    }
     private var removeMessage: String {
-        if case .app = item { return "It is uninstalled from Android, with its data." }
-        return "Its files and saved progress are deleted from Husk."
+        if case .app = item { return String(localized: "It is uninstalled from Android, with its data.") }
+        return String(localized: "Its files and saved progress are deleted from Husk.")
     }
 }
 
@@ -1141,7 +1146,7 @@ struct BusyStrip: View {
 /// A search field as the system draws one.
 struct SearchField: View {
     @Binding var text: String
-    let prompt: String
+    let prompt: LocalizedStringKey
     @FocusState private var focused: Bool
 
     var body: some View {

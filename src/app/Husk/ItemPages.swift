@@ -77,7 +77,7 @@ private struct PageChip: View {
 
 /// The page's main button.
 private struct BigButton: View {
-    let title: String
+    let title: LocalizedStringKey
     let systemImage: String
     var prominent = true
     let action: () -> Void
@@ -149,25 +149,25 @@ struct GamePage: View {
     private var blockedBy: String? {
         guard let loaded = husk_native_loaded_apk().map({ String(cString: $0) }), let apk = app.apks.first, loaded != apk
         else { return nil }
-        return store.apps.first { $0.apks.first == loaded }?.label ?? "Another game"
+        return store.apps.first { $0.apks.first == loaded }?.label ?? String(localized: "Another game")
     }
 
     private var preflight: AppDiagnosis? { AppDiagnosis.preflight(app) }
 
     /// Under Play: what runs it, how long it has been played, and when last.
     private var gameFacts: [(symbol: String, text: String)] {
-        var f: [(symbol: String, text: String)] = [("cpu", app.report?.runnerName ?? "Translation Layer")]
+        var f: [(symbol: String, text: String)] = [("cpu", app.report?.runnerName ?? String(localized: "Translation Layer"))]
         let t = Playtime.seconds(LibraryItem.game(app).id)
-        f.append(("gamecontroller", t > 0 ? Playtime.text(t) + " played" : "Not played yet"))
+        f.append(("gamecontroller", t > 0 ? String(localized: "\(Playtime.text(t)) played") : String(localized: "Not played yet")))
         if let d = app.lastPlayed {
             let r = RelativeDateTimeFormatter(); r.unitsStyle = .short
-            f.append(("clock", "Last played\n" + r.localizedString(for: d, relativeTo: Date())))
+            f.append(("clock", String(localized: "Last played\n\(r.localizedString(for: d, relativeTo: Date()))")))
         }
         return f
     }
 
     /// When it was last played is in the facts already: only a warning here.
-    private var subtitle: String { runs ? "" : "May not run on this iPhone" }
+    private var subtitle: String { runs ? "" : String(localized: "May not run on this iPhone") }
 
     var body: some View {
         HuskPageList {
@@ -175,12 +175,16 @@ struct GamePage: View {
                 PageHero(item: .game(app), subtitle: subtitle, facts: gameFacts) { primary }
             } footer: {
                 if isGeodeLauncher {
-                    Text("This is Geode's Android launcher. On Husk, Geode runs inside Geometry Dash instead: turn it on here "
-                       + "(or in Geometry Dash's settings, under Mods), then start Geometry Dash and use Geode's button on its "
-                       + "main menu to get mods. This APK supplies a library Geode needs, so keep it.")
+                    Text("""
+                         This is Geode's Android launcher. On Husk, Geode runs inside Geometry Dash instead: turn it on here \
+                         (or in Geometry Dash's settings, under Mods), then start Geometry Dash and use Geode's button on its \
+                         main menu to get mods. This APK supplies a library Geode needs, so keep it.
+                         """)
                 } else if let other = blockedBy {
-                    Text("\(other) is still loaded, and a game cannot be unloaded once it has started. Close Husk with the "
-                       + "button above, then open it again to play \(app.label).")
+                    Text("""
+                         \(other) is still loaded, and a game cannot be unloaded once it has started. Close Husk with the \
+                         button above, then open it again to play \(app.label).
+                         """)
                 } else if !runs {
                     Text("This APK has no 64-bit code Husk can run, so it will probably not start.")
                 }
@@ -238,13 +242,13 @@ struct GamePage: View {
             }
 
             Section("About") {
-                LabeledContent("Runs With", value: app.report?.runnerName ?? "Unknown")
+                LabeledContent("Runs With", value: app.report?.runnerName ?? String(localized: "Unknown"))
                 if let st = GameStatusStore.shared.status(app.id) {
                     LabeledContent("Last Result") {
                         Label(st.result.label, systemImage: st.result.symbol).foregroundStyle(st.result.color)
                     }
                 }
-                LabeledContent("Last Played", value: app.lastPlayed.map { $0.formatted(date: .abbreviated, time: .shortened) } ?? "Never")
+                LabeledContent("Last Played", value: app.lastPlayed.map { $0.formatted(date: .abbreviated, time: .shortened) } ?? String(localized: "Never"))
                 LabeledContent("Size", value: fileBytes(app.apks))
             }
 
@@ -387,7 +391,7 @@ struct GamePage: View {
             await MainActor.run {
                 savesBusy = false
                 switch result {
-                case .success(let n): savesMessage = "Restored \(n) file\(n == 1 ? "" : "s") from \(url.lastPathComponent)."
+                case .success(let n): savesMessage = String(localized: "Restored \(n) files from \(url.lastPathComponent).")
                 case .failure(let e): savesMessage = e.localizedDescription
                 }
             }
@@ -420,7 +424,7 @@ struct GamePage: View {
                 .frame(maxWidth: .infinity).frame(height: 50)
         } else if !Launcher.jitOn && !JITLess.enabled {
             if jit.busy {
-                HStack(spacing: 10) { ProgressView(); Text(jit.status ?? "Turning on JIT…").foregroundStyle(.secondary) }
+                HStack(spacing: 10) { ProgressView(); Text(jit.status ?? String(localized: "Turning on JIT…")).foregroundStyle(.secondary) }
                     .frame(maxWidth: .infinity).frame(height: 50)
             } else {
                 BigButton(title: "Turn On JIT to Play", systemImage: "bolt.fill", action: turnOnJIT)
@@ -446,18 +450,18 @@ struct PS4GamePage: View {
     private var blockedBy: String? {
         if Router.shared.androidStarted { return "Android" }   // QEMU holds the JIT region the PS4 layer needs
         guard let loaded = husk_native_loaded_apk().map({ String(cString: $0) }), loaded != game.libraryID else { return nil }
-        if loaded.hasPrefix("ps4:") { return PS4Store.shared.game(String(loaded.dropFirst(4)))?.title ?? "Another game" }
-        return TranslationLayerStore.shared.apps.first { $0.apks.first == loaded }?.label ?? "Another game"
+        if loaded.hasPrefix("ps4:") { return PS4Store.shared.game(String(loaded.dropFirst(4)))?.title ?? String(localized: "Another game") }
+        return TranslationLayerStore.shared.apps.first { $0.apks.first == loaded }?.label ?? String(localized: "Another game")
     }
 
     /// The same facts as an Android game's: version, how long it has been played, and when last.
     private var facts: [(symbol: String, text: String)] {
         var f: [(symbol: String, text: String)] = [("cpu", "PS4 layer" + (game.version.map { "\nv\($0)" } ?? ""))]
         let t = Playtime.seconds(item.id)
-        f.append(("gamecontroller", t > 0 ? Playtime.text(t) + " played" : "Not played yet"))
+        f.append(("gamecontroller", t > 0 ? String(localized: "\(Playtime.text(t)) played") : String(localized: "Not played yet")))
         if let d = game.lastPlayed {
             let r = RelativeDateTimeFormatter(); r.unitsStyle = .short
-            f.append(("clock", "Last played\n" + r.localizedString(for: d, relativeTo: Date())))
+            f.append(("clock", String(localized: "Last played\n\(r.localizedString(for: d, relativeTo: Date()))")))
         }
         return f
     }
@@ -475,10 +479,10 @@ struct PS4GamePage: View {
                 }
             }
             Section("About") {
-                LabeledContent("Runs With", value: "Husk's PS4 layer")
+                LabeledContent("Runs With", value: String(localized: "Husk's PS4 layer"))
                 LabeledContent("Title ID", value: game.titleID)
                 if let v = game.version { LabeledContent("Version", value: v) }
-                LabeledContent("Last Played", value: game.lastPlayed.map { $0.formatted(date: .abbreviated, time: .shortened) } ?? "Never")
+                LabeledContent("Last Played", value: game.lastPlayed.map { $0.formatted(date: .abbreviated, time: .shortened) } ?? String(localized: "Never"))
                 LabeledContent("Folder", value: "PS4 Games/" + game.folder.lastPathComponent)
             }
         }
@@ -512,7 +516,7 @@ struct PS4GamePage: View {
             BigButton(title: "Close Husk to Play", systemImage: "xmark.circle", prominent: false) { confirmQuit = true }
         } else if !Launcher.jitOn {
             if jit.busy {
-                HStack(spacing: 10) { ProgressView(); Text(jit.status ?? "Turning on JIT…").foregroundStyle(.secondary) }
+                HStack(spacing: 10) { ProgressView(); Text(jit.status ?? String(localized: "Turning on JIT…")).foregroundStyle(.secondary) }
                     .frame(maxWidth: .infinity).frame(height: 50)
             } else {
                 BigButton(title: "Turn On JIT to Play", systemImage: "bolt.fill", action: turnOnJIT)
@@ -544,7 +548,7 @@ struct AndroidAppPage: View {
     var body: some View {
         HuskPageList {
             Section {
-                PageHero(item: item, subtitle: item.usedText ?? "Runs inside Android") { primary }
+                PageHero(item: item, subtitle: item.usedText ?? String(localized: "Runs inside Android")) { primary }
             } footer: {
                 if router.pendingAndroidLaunch == app.name, !host.isReady {
                     Text("\(live.label) opens by itself once Android has started.")
@@ -687,8 +691,10 @@ struct AndroidSystemPage: View {
             }
 
             Section {
-                Text("Android runs fully emulated, so it is slower than games on the translation layer. Use it for apps "
-                   + "Husk cannot run directly, like Termux or app stores.")
+                Text("""
+                     Android runs fully emulated, so it is slower than games on the translation layer. Use it for apps \
+                     Husk cannot run directly, like Termux or app stores.
+                     """)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -701,16 +707,16 @@ struct AndroidSystemPage: View {
 
     private var status: String {
         if running {
-            if host.isReady { return "Running" }
-            return runner.setupMessage ?? (runner.bootProgress > 0 ? "Starting · \(runner.bootProgress)%" : "Starting…")
+            if host.isReady { return String(localized: "Running") }
+            return runner.setupMessage ?? (runner.bootProgress > 0 ? String(localized: "Starting · \(runner.bootProgress)%") : String(localized: "Starting…"))
         }
         switch guest.state {
-        case .missing: return "Not downloaded yet"
+        case .missing: return String(localized: "Not downloaded yet")
         case .downloading(_, let received, let total):
-            return "Downloading · \(bytes(received)) of \(total > 0 ? bytes(total) : "…")"
-        case .installing: return "Installing…"
-        case .failed: return "Something went wrong"
-        case .ready: return Launcher.jitOn ? "Ready to start" : "Needs JIT to start"
+            return String(localized: "Downloading · \(bytes(received)) of \(total > 0 ? bytes(total) : "…")")
+        case .installing: return String(localized: "Installing…")
+        case .failed: return String(localized: "Something went wrong")
+        case .ready: return Launcher.jitOn ? String(localized: "Ready to start") : String(localized: "Needs JIT to start")
         }
     }
 
@@ -723,7 +729,7 @@ struct AndroidSystemPage: View {
     private var note: String? {
         guard !running else { return nil }
         switch guest.state {
-        case .missing: return "Husk's Android runtime is about 760 MB. Android itself follows once it is installed."
+        case .missing: return String(localized: "Husk's Android runtime is about 760 MB. Android itself follows once it is installed.")
         case .failed(let message): return message
         default: return nil
         }
@@ -753,7 +759,7 @@ struct AndroidSystemPage: View {
                 BigButton(title: "Try Again", systemImage: "arrow.clockwise") { JITBootstrap.prewarm(); guest.download() }
             case .ready:
                 if jit.busy {
-                    HStack(spacing: 10) { ProgressView(); Text(jit.status ?? "Turning on JIT…").foregroundStyle(.secondary) }
+                    HStack(spacing: 10) { ProgressView(); Text(jit.status ?? String(localized: "Turning on JIT…")).foregroundStyle(.secondary) }
                         .frame(maxWidth: .infinity).frame(height: 50)
                 } else {
                     BigButton(title: Launcher.jitOn ? "Start Android" : "Turn On JIT", systemImage: Launcher.jitOn ? "power" : "bolt.fill") {
