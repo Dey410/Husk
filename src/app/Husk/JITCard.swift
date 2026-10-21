@@ -45,7 +45,7 @@ struct JITCard: View {
                 Button { jit.showSetup = true } label: {
                     VStack(alignment: .leading, spacing: 1) {
                         Text("JIT is off").font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
-                        Text(jit.busy ? (jit.status ?? "Turning on JIT…") : "Games need it. \(offered == .builtIn ? "StikJIT" : offered.title) turns it on.")
+                        Text(jit.busy ? (jit.status ?? String(localized: "Turning on JIT…")) : String(localized: "Games need it. \(offered == .builtIn ? "StikJIT" : offered.title) turns it on."))
                             .font(.caption).foregroundStyle(.secondary).lineLimit(1)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -77,22 +77,23 @@ struct JITCard: View {
         .background(Color(uiColor: .secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
-    private var explanation: String {
+    private var explanation: LocalizedStringKey {
         switch offered {
         case .trollStore:
-            return "TrollStore can turn JIT on for Husk: it opens Husk and enables it, with no computer. "
-                 + "In TrollStore's Settings, URL Scheme must be on."
+            return """
+                   TrollStore can turn JIT on for Husk: it opens Husk and enables it, with no computer. \
+                   In TrollStore's Settings, URL Scheme must be on.
+                   """
         case .jailbreak:
             return "On a jailbroken device JIT is a setting. In Dopamine, turn on Allow JIT in Apps, then open Husk again."
         case .stikDebug:
             return "StikDebug is installed, so Husk will open it to turn JIT on."
         default:
-            return "StikJIT is built into Husk. You can turn JIT on right here — no computer and no other app. "
-                 + "Games and Android both need it."
+            return "StikJIT is built into Husk. You can turn JIT on right here — no computer and no other app. Games and Android both need it."
         }
     }
 
-    private var buttonTitle: String {
+    private var buttonTitle: LocalizedStringKey {
         switch offered {
         case .trollStore: return "Turn On JIT with TrollStore"
         case .jailbreak: return "How to Allow JIT"
@@ -141,7 +142,7 @@ struct JITCard: View {
             if jit.busy {
                 HStack(spacing: 10) {
                     ProgressView()
-                    Text(jit.status ?? "Turning on JIT…").font(.subheadline).foregroundStyle(.secondary)
+                    Text(jit.status ?? String(localized: "Turning on JIT…")).font(.subheadline).foregroundStyle(.secondary)
                 }
             } else {
                 Button {

@@ -21,6 +21,11 @@ settings:
     ARCHS: arm64
     ONLY_ACTIVE_ARCH: YES
     ENABLE_BITCODE: NO
+    # The interface is localized through string catalogs (Husk/Localizable.xcstrings,
+    # HuskDownloadsWidget/Localizable.xcstrings). With these, a build adds any new
+    # Text("...") or String(localized: "...") to the catalog for translating.
+    SWIFT_EMIT_LOC_STRINGS: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
     SWIFT_VERSION: "5.0"
     # The guest framebuffer path is latency-sensitive and the JIT path is
     # timing-sensitive; never let a debug build of the display loop mislead us.

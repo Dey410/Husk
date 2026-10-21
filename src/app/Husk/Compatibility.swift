@@ -46,10 +46,10 @@ final class CompatibilityStore: ObservableObject {
         case works, opens, broken, protected
         var label: String {
             switch self {
-            case .works: return "Works"
-            case .opens: return "Opens"
-            case .broken: return "Doesn\u{2019}t Work"
-            case .protected: return "Protected"
+            case .works: return String(localized: "Works")
+            case .opens: return String(localized: "Opens")
+            case .broken: return String(localized: "Doesn\u{2019}t Work")
+            case .protected: return String(localized: "Protected")
             }
         }
         var symbol: String {
@@ -70,10 +70,10 @@ final class CompatibilityStore: ObservableObject {
         }
         var explanation: String {
             switch self {
-            case .works: return "Runs and plays or works normally."
-            case .opens: return "Starts and shows its screens, but has not been fully tested or has problems."
-            case .broken: return "Crashes or closes while starting."
-            case .protected: return "Refuses to run outside a real Android phone (anti-cheat, anti-tamper or DRM). Husk does not get around that."
+            case .works: return String(localized: "Runs and plays or works normally.")
+            case .opens: return String(localized: "Starts and shows its screens, but has not been fully tested or has problems.")
+            case .broken: return String(localized: "Crashes or closes while starting.")
+            case .protected: return String(localized: "Refuses to run outside a real Android phone (anti-cheat, anti-tamper or DRM). Husk does not get around that.")
             }
         }
     }
@@ -179,7 +179,7 @@ final class CompatibilityStore: ObservableObject {
         }
         guard (200..<300).contains(http.statusCode) else {
             let message = (try? JSONSerialization.jsonObject(with: data) as? [String: Any])?["error"] as? String
-            throw NSError(domain: "Compatibility", code: 1, userInfo: [NSLocalizedDescriptionKey: message ?? "The compatibility list could not be reached."])
+            throw NSError(domain: "Compatibility", code: 1, userInfo: [NSLocalizedDescriptionKey: message ?? String(localized: "The compatibility list could not be reached.")])
         }
         HuskLog.log("compat", "reported \(package): \(status.rawValue)")
         markAsked(package)
@@ -279,7 +279,7 @@ struct CompatReportSheet: View {
                     ForEach([CompatibilityStore.Status.works, .opens, .broken], id: \.self) { s in
                         Button { status = s } label: {
                             HStack {
-                                Label(s == .opens ? "Opens, but Has Problems" : s.label, systemImage: s.symbol)
+                                Label(s == .opens ? String(localized: "Opens, but Has Problems") : s.label, systemImage: s.symbol)
                                     .foregroundStyle(.primary)
                                 Spacer()
                                 if status == s { Image(systemName: "checkmark").foregroundStyle(.tint) }

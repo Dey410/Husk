@@ -30,23 +30,23 @@ final class CrashReport: ObservableObject {
 
         var title: String {
             switch self {
-            case .signal: return "The game crashed"
-            case .startFailed: return "The game could not start"
-            case .unknown: return "Husk closed while the game was running"
+            case .signal: return String(localized: "The game crashed")
+            case .startFailed: return String(localized: "The game could not start")
+            case .unknown: return String(localized: "Husk closed while the game was running")
             case .diagnosed(let d): return d.title
             }
         }
         var detail: String {
             switch self {
             case .signal(let s):
-                let name = [11: "SIGSEGV, a bad memory access", 6: "SIGABRT, the game or a library gave up",
-                            4: "SIGILL, an instruction this device does not run", 8: "SIGFPE, an arithmetic error",
-                            12: "SIGSYS, a system call iOS does not allow"][s] ?? "signal \(s)"
-                return "It stopped with \(name). The report has the full log of that run."
+                let name = [11: String(localized: "SIGSEGV, a bad memory access"), 6: String(localized: "SIGABRT, the game or a library gave up"),
+                            4: String(localized: "SIGILL, an instruction this device does not run"), 8: String(localized: "SIGFPE, an arithmetic error"),
+                            12: String(localized: "SIGSYS, a system call iOS does not allow")][s] ?? String(localized: "signal \(s)")
+                return String(localized: "It stopped with \(name). The report has the full log of that run.")
             case .startFailed:
-                return "The runtime could not start it. The report says which part was missing."
+                return String(localized: "The runtime could not start it. The report says which part was missing.")
             case .unknown:
-                return "Nothing was recorded, which usually means iOS ended Husk for using too much memory, or Husk was closed from the app switcher."
+                return String(localized: "Nothing was recorded, which usually means iOS ended Husk for using too much memory, or Husk was closed from the app switcher.")
             case .diagnosed(let d):
                 return d.detail
             }
@@ -112,7 +112,7 @@ final class CrashReport: ObservableObject {
         }
         if let d = AppDiagnosis.fromLog(lines.joined(separator: "\n")) { cause = .diagnosed(d) }
         let time = (info["time"] as? Double).map { Date(timeIntervalSince1970: $0) }
-        pending = Report(game: info["label"] as? String ?? "A game", appID: info["id"] as? String ?? "",
+        pending = Report(game: info["label"] as? String ?? String(localized: "A game"), appID: info["id"] as? String ?? "",
                          cause: cause, when: time, excerpt: Array(Self.interesting(lines).suffix(14)))
         HuskLog.log("crash", "\(pending!.game) did not close normally last run: \(cause.title)")
         switch cause {

@@ -399,7 +399,7 @@ final class GuestImage: ObservableObject {
         if let why = check.problem {
             HuskLog.log("guest", "existing guest disk is INVALID (\(why)); removing it")
             try? FileManager.default.removeItem(atPath: diskPath)
-            state = .failed("The runtime on disk is not a valid image (\(why)). Tap to retry.")
+            state = .failed(String(localized: "The runtime on disk is not a valid image (\(why)). Tap to retry."))
         } else {
             HuskLog.log("guest", "guest disk present and valid: \(check.size ?? 0) bytes")
             state = .ready
@@ -575,7 +575,7 @@ final class GuestImage: ObservableObject {
         }
         if let short = snapshotSpaceShortfall() {
             HuskLog.log("guest", "not fetching the pre-booted snapshot: \(short)")
-            failed("Not enough free space for the pre-booted snapshot: \(short).")
+            failed(String(localized: "Not enough free space for the pre-booted snapshot: \(short)."))
             return
         }
         isFetchingSnapshot = true
@@ -595,9 +595,7 @@ final class GuestImage: ObservableObject {
                         if let want = self.manifest?.snapshot.sha256, want != joined.digest {
                             try? FileManager.default.removeItem(at: joined.url)
                             self.isFetchingSnapshot = false
-                            self.failed("The snapshot did not match the release "
-                                      + "(sha256 \(joined.digest.prefix(12)), expected "
-                                      + "\(want.prefix(12))).")
+                            self.failed(String(localized: "The snapshot did not match the release (sha256 \(joined.digest.prefix(12)), expected \(want.prefix(12)))."))
                             return
                         }
                         self.finishedSnapshot(tempURL: joined.url, digest: joined.digest)
@@ -642,7 +640,7 @@ final class GuestImage: ObservableObject {
                 try? FileManager.default.removeItem(at: dest)
                 try? FileManager.default.removeItem(atPath: self.snapshotStampPath)
                 DispatchQueue.main.async {
-                    self.state = .failed("Could not unpack the snapshot: \(error.localizedDescription)")
+                    self.state = .failed(String(localized: "Could not unpack the snapshot: \(error.localizedDescription)"))
                 }
             }
         }
@@ -715,7 +713,7 @@ final class GuestImage: ObservableObject {
         else { return nil }
         guard free < need else { return nil }
         let gb = { (b: Int64) in String(format: "%.1f GB", Double(b) / 1e9) }
-        return "it needs \(gb(need)) free and the device has \(gb(free))"
+        return String(localized: "it needs \(gb(need)) free and the device has \(gb(free))")
     }
 
     /// The staging files of a download or unpack that a previous run did not live to finish: gigabytes in tmp that iOS only
@@ -845,7 +843,7 @@ final class GuestImage: ObservableObject {
             try? FileManager.default.removeItem(at: tempURL)
             HuskLog.log("guest", "image rejected: sha256 \(got.prefix(12)) but the "
                                + "release says \(want.prefix(12))")
-            state = .failed("The downloaded image did not match the release. Tap to retry.")
+            state = .failed(String(localized: "The downloaded image did not match the release. Tap to retry."))
             return
         }
         // Validate BEFORE installing, so a bad download never becomes the thing
@@ -854,7 +852,7 @@ final class GuestImage: ObservableObject {
         if let why = check.problem {
             try? FileManager.default.removeItem(at: tempURL)
             HuskLog.log("guest", "downloaded file rejected: \(why)")
-            state = .failed("Download did not produce a disk image: \(why)")
+            state = .failed(String(localized: "Download did not produce a disk image: \(why)"))
             return
         }
         let size = check.size ?? 0

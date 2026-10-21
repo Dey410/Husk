@@ -29,18 +29,18 @@ struct BootScreen: View {
     /// looking at the screen, and the jokes should not repeat before the
     /// information does.
     private static let phrases = [
-        "Prepare for awesomeness",
-        "Waking Android up",
-        "Teaching an iPhone to speak Android",
-        "This is a whole operating system — be patient",
-        "App by Levi",
-        "Star the repo if you like this sort of thing",
-        "Translating arm64, one block at a time",
-        "No, it has not frozen",
-        "Unpacking the guest",
-        "Almost worth the wait",
-        "Negotiating with the JIT",
-        "Nearly there",
+        String(localized: "Prepare for awesomeness"),
+        String(localized: "Waking Android up"),
+        String(localized: "Teaching an iPhone to speak Android"),
+        String(localized: "This is a whole operating system — be patient"),
+        String(localized: "App by Levi"),
+        String(localized: "Star the repo if you like this sort of thing"),
+        String(localized: "Translating arm64, one block at a time"),
+        String(localized: "No, it has not frozen"),
+        String(localized: "Unpacking the guest"),
+        String(localized: "Almost worth the wait"),
+        String(localized: "Negotiating with the JIT"),
+        String(localized: "Nearly there"),
     ]
 
     var body: some View {
@@ -164,8 +164,8 @@ struct BootScreen: View {
         // for ten minutes, so show elapsed time instead.
         if done >= 58, !QemuRunner.didRestore {
             let mins = Int(now.timeIntervalSince(QemuRunner.bootStarted) / 60)
-            return mins < 1 ? "first boot takes 5–15 min"
-                            : "\(mins) min · first boot takes 5–15 min"
+            return mins < 1 ? String(localized: "first boot takes 5–15 min")
+                            : String(localized: "\(mins) min · first boot takes 5–15 min")
         }
         guard done >= 8, done <= 92 else { return nil }
         let elapsed = now.timeIntervalSince(began)
@@ -175,8 +175,8 @@ struct BootScreen: View {
         guard left > 2, left < 15 * 60 else { return nil }
         if left < 90 {
             let rounded = Int((left / 5).rounded()) * 5
-            return "about \(max(rounded, 5)) seconds remaining"
+            return String(localized: "about \(max(rounded, 5)) seconds remaining")
         }
-        return "about \(Int((left / 60).rounded())) minutes remaining"
+        return String(localized: "about \(Int((left / 60).rounded())) minutes remaining")
     }
 }
