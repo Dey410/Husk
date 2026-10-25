@@ -1,0 +1,74 @@
+name: Build app
+
+# Husk.ipa from this branch's app and translation-layer source, in minutes rather than the hours of scripts/ci_build.sh.
+# QEMU, ANGLE, MoltenVK, the PS4 layer, the guest kernel, the system fonts and certificates, and the Java runtime's Android
+# parts are taken from a released IPA (3.0 is built from dbc202a; none of their sources have changed since). The Java
+# framework and the on-device pairing library are built here. The IPA is signed ad hoc, for a sideloader to re-sign.
+on:
+  workflow_dispatch:
+    inputs:
+      base_ipa:
+        description: Released IPA whose prebuilt parts are reused
+        default: https://github.com/Leviidev/Husk/releases/download/3.0/Husk.ipa
+  push:
+    paths-ignore: ["**.md", "docs/**", "tools/**", "showcase/**", "Screenshots/**", "catalog/**"]
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      BASE_IPA: ${{ inputs.base_ipa || 'https://github.com/Leviidev/Husk/releases/download/3.0/Husk.ipa' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select newest Xcode
+        run: |
+          XC="$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          sudo xcode-select -s "$XC/Contents/Developer"
+          xcodebuild -version
+
+      - name: Host tools
+        run: |
+          brew install xcodegen qemu
+          rustup target add aarch64-apple-ios
+
+      - name: Prebuilt parts from the released IPA
+        run: |
+          curl -fL --retry 3 -o "$RUNNER_TEMP/base.ipa" "$BASE_IPA"
+          unzip -q "$RUNNER_TEMP/base.ipa" -d "$RUNNER_TEMP/base"
+          A="$RUNNER_TEMP/base/Payload/Husk.app"
+          BIOS=third_party/build/qemu-10.0.12-utm/pc-bios
+          mkdir -p build/ios-arm64/lib build/ios-arm64/sysroot/lib guests/phase0 "$BIOS"
+          cp "$A/Frameworks/libqemu-aarch64-softmmu.dylib" "$A/Frameworks/libhuskps4.dylib" build/ios-arm64/lib/
+          cp "$A/Frameworks/libANGLE-shared.dylib" build/ios-arm64/sysroot/lib/
+          xcodebuild -create-xcframework -framework "$A/Frameworks/MoltenVK.framework" -output build/ios-arm64/lib/MoltenVK.xcframework
+          cp "$A/vmlinuz-virt" "$A/initramfs-virt" guests/phase0/
+          cp "$A"/pc-bios/*.rom "$BIOS/"
+          bzip2 -c "$A/edk2-aarch64-code.fd" > "$BIOS/edk2-aarch64-code.fd.bz2"
+          cp -R "$A/android-system" build/android-system
+          cp -R "$A/java-runtime" build/java-runtime
+
+      - name: Java framework
+        run: |
+          curl -fL --retry 3 -o "$RUNNER_TEMP/r8.jar" https://dl.google.com/android/maven2/com/android/tools/r8/8.5.35/r8-8.5.35.jar
+          HUSK_JDK="${JAVA_HOME_17_arm64:-$JAVA_HOME}" HUSK_D8="$RUNNER_TEMP/r8.jar" src/java-framework/build.sh build/java-runtime/husk-framework.dex
+
+      - name: On-device pairing library
+        run: ./scripts/build_rppairing_ios.sh
+
+      - name: App and IPA
+        run: DD="$RUNNER_TEMP/husk_ipa" ./scripts/package_ipa.sh "$PWD/build/Husk.ipa"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Husk-${{ github.ref_name }}-${{ github.sha }}
+          path: build/Husk.ipa
+
+      - name: Build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: ${{ runner.temp }}/husk_ipa/build.log
+          if-no-files-found: ignore
