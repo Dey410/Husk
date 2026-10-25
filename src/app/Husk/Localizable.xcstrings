@@ -6597,6 +6597,16 @@
         }
       }
     },
+    "Out of address space" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地址空间不足"
+          }
+        }
+      }
+    },
     "PS4 games" : {
       "localizations" : {
         "zh-Hans" : {
@@ -9387,6 +9397,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "游戏已在本次运行中加载。请完全关闭 Husk 后重新打开，再重置它的数据。"
+          }
+        }
+      }
+    },
+    "The game ran out of address space, not memory: iOS refused to set aside more addresses for it. An app without the extended virtual addressing entitlement gets only a few GB of addresses, and installs re-signed with your own Apple account or team often lose that entitlement. Install Husk with it kept, then start the game again." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "游戏耗尽的是地址空间，而不是内存：iOS 拒绝再为它预留地址。没有“扩展虚拟寻址”（extended virtual addressing）权限的 App 只能使用几 GB 的地址，而用你自己的 Apple 账户或团队重新签名的安装常常会丢失这项权限。请以保留该权限的方式安装 Husk，然后重新启动游戏。"
           }
         }
       }
