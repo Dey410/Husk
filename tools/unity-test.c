@@ -4,7 +4,9 @@
  *
  *   unity-test <apk> [seconds]
  *
- * Environment: TL_JNI_TRACE=1|2 (log JNI lookups / every call), TL_SKIP=a.so,...
+ * Environment: TL_JNI_TRACE=1|2 (log JNI lookups / every call), TL_SKIP=a.so,..., TL_DATA=dir (a data dir kept between runs),
+ * TL_MM_TOTAL_GIB=n (the address space of a phone without extended virtual addressing), TL_UNITY_SYSTEM_ALLOCATOR=1|0,
+ * TL_UNITY_ARGS="-arg ..." (the player's command line).
  */
 #include <mach/mach.h>
 #include <mach/mach_vm.h>
@@ -16,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/stat.h>
 #include <sys/ucontext.h>
 #include <unistd.h>
 
@@ -25,6 +28,7 @@
 #include "husk-tl-gamepad.h"
 #include "husk-tl-xmem.h"
 #include "husk-tl-audio.h"
+#include "husk-tl-bionic.h"
 
 static void dump_pushes(void);
 
@@ -348,7 +352,8 @@ static void *control_thread(void *arg)
             else if (sscanf(line, "shot %399s", p) == 1) {
                 char cmd[900]; snprintf(cmd, sizeof(cmd), "sips -s format png '%s/latest.bmp' --out '%s' >/dev/null 2>&1", g_frame_dir, p);
                 if (system(cmd)) fprintf(stderr, "ctl: shot failed\n");
-                else fprintf(stderr, "ctl: shot %s (frame %lu)\n", p, tl_unity_frames());
+                else { size_t g = 0, va = tl_mm_address_space_used(&g);
+                       fprintf(stderr, "ctl: shot %s (frame %lu, %.2f GiB of address space mapped, %.2f GiB by the game)\n", p, tl_unity_frames(), va / 1073741824.0, g / 1073741824.0); }
             }
             else if (!strncmp(line, "quit", 4)) { fprintf(stderr, "ctl: quit\n"); fflush(stderr); _exit(0); }
         }
@@ -378,11 +383,13 @@ int main(int argc, char **argv)
     { struct sigaction sd; memset(&sd, 0, sizeof(sd)); sd.sa_sigaction = on_dump; sd.sa_flags = SA_SIGINFO | SA_ONSTACK; sigemptyset(&sd.sa_mask); sigaction(SIGUSR2, &sd, NULL); }
     tl_ld_set_verbosity(getenv("TL_VERBOSE") ? atoi(getenv("TL_VERBOSE")) : 1);
     tl_jni_set_trace(getenv("TL_JNI_TRACE") ? atoi(getenv("TL_JNI_TRACE")) : 1);
-    char tmp[] = "/Volumes/GTAV/husk2/tmp/husk-unity-XXXXXX";
-    mkdtemp(tmp);
+    char tmp[600] = "/Volumes/GTAV/husk2/tmp/husk-unity-XXXXXX";
+    if (getenv("TL_DATA")) { snprintf(tmp, sizeof(tmp), "%s", getenv("TL_DATA")); mkdir(tmp, 0755); }
+    else if (!mkdtemp(tmp)) { snprintf(tmp, sizeof(tmp), "/tmp/husk-unity-XXXXXX"); mkdtemp(tmp); }
     const char *cef = "/Users/davi/Library/Application Support/Steam/Steam.AppBundle/Steam/Contents/MacOS/Frameworks/Chromium Embedded Framework.framework/Versions/A/Libraries";
     char egl[600], gles[600]; snprintf(egl, sizeof(egl), "%s/libEGL.dylib", cef); snprintf(gles, sizeof(gles), "%s/libGLESv2.dylib", cef);
-    char frames[] = "/Volumes/GTAV/husk2/tmp/husk-frames-XXXXXX"; mkdtemp(frames);
+    static char frames[64] = "/Volumes/GTAV/husk2/tmp/husk-frames-XXXXXX";
+    if (!mkdtemp(frames)) { snprintf(frames, sizeof(frames), "/tmp/husk-frames-XXXXXX"); mkdtemp(frames); }
     fprintf(stderr, "frames: %s\n", frames);
     /* TL_SPLITS: the app's split APKs, colon-separated (a Google Play install: libraries and asset packs in their own APKs) */
     if (getenv("TL_SPLITS")) { char *l = strdup(getenv("TL_SPLITS")); for (char *t = strtok(l, ":"); t; t = strtok(NULL, ":")) tl_ld_queue_split(t); }
