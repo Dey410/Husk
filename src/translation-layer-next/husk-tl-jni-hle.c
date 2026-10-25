@@ -40,6 +40,7 @@ static jvalue vl(void *p) { jvalue v; v.j = 0; v.l = p; return v; }
 static jvalue vi(int i) { jvalue v; v.j = 0; v.i = i; return v; }
 static jvalue vz(int z) { jvalue v; v.j = 0; v.z = z != 0; return v; }
 static jvalue vf(float f) { jvalue v; v.j = 0; v.f = f; return v; }
+static jvalue vj(int64_t j) { jvalue v; v.j = j; return v; }
 
 static void mkdirs(const char *path)
 {
@@ -205,6 +206,12 @@ static void fill_metrics(jobj *m)
 static void Display_getMetrics(tl_jcall *c) { fill_metrics(c->args[0].l); }
 static void Display_getRotation(tl_jcall *c) { c->ret = vi(0); }
 static void Display_getRefreshRate(tl_jcall *c) { c->ret = vf(60.f); }
+/* When vsync reaches the app and the compositor, as a 60 Hz phone has it. Swappy (Unity's frame pacing) takes the compositor's offset
+ * to be period - (deadline - 1 ms) - app offset and keeps its own vsync clock by it: with both at zero, as unimplemented methods left
+ * them, that offset is longer than a frame, its estimate of the period grows without end, and a game sinks from 60 to under 10 frames
+ * a second within a minute. */
+static void Display_getAppVsyncOffsetNanos(tl_jcall *c) { c->ret = vj(1000000); }
+static void Display_getPresentationDeadlineNanos(tl_jcall *c) { c->ret = vj(1000000000ll / 60 - 5000000); }
 static void Display_getDisplayId(tl_jcall *c) { c->ret = vi(0); }
 static void Display_getWidth(tl_jcall *c) { c->ret = vi(H.width); }
 static void Display_getHeight(tl_jcall *c) { c->ret = vi(H.height); }
@@ -1037,6 +1044,8 @@ static const tl_jhle k_hle[] = {
     M("android/view/Display", "getRealMetrics", "(Landroid/util/DisplayMetrics;)V", Display_getMetrics),
     M("android/view/Display", "getRotation", "()I", Display_getRotation),
     M("android/view/Display", "getRefreshRate", "()F", Display_getRefreshRate),
+    M("android/view/Display", "getAppVsyncOffsetNanos", "()J", Display_getAppVsyncOffsetNanos),
+    M("android/view/Display", "getPresentationDeadlineNanos", "()J", Display_getPresentationDeadlineNanos),
     M("android/view/Display", "getDisplayId", "()I", Display_getDisplayId),
     M("android/view/Display", "getWidth", "()I", Display_getWidth), M("android/view/Display", "getHeight", "()I", Display_getHeight),
     M("android/view/Display", "getName", "()Ljava/lang/String;", Display_getName),
