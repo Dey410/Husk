@@ -40,7 +40,7 @@ struct StoreView: View {
                     if manager.isSignedIn {
                         Menu {
                             if let s = manager.session {
-                                Text(s.isAnonymous ? "Guest Account (Aurora)" : s.email)
+                                Text(s.isAnonymous ? String(localized: "Guest Account (Aurora)") : s.email)
                                     .font(.caption)
                                 if s.isAnonymous {
                                     Text(s.email).font(.caption2).foregroundStyle(.secondary)
@@ -126,7 +126,7 @@ struct StoreView: View {
             if manager.isLoading {
                 VStack(spacing: 12) {
                     ProgressView()
-                    Text(manager.statusMessage ?? "Signing in…")
+                    Text(manager.statusMessage ?? String(localized: "Signing in…"))
                         .font(.footnote)
                         .foregroundStyle(Theme.textDim)
                 }
@@ -371,11 +371,11 @@ struct PlayAppDetailSheet: View {
 
                     // Metrics row
                     HStack {
-                        metricItem(title: "Rating", value: app.rating > 0 ? String(format: "%.1f ★", app.rating) : "N/A")
+                        metricItem(title: "Rating", value: app.rating > 0 ? String(format: "%.1f ★", app.rating) : String(localized: "N/A"))
                         Spacer()
                         metricItem(title: "Downloads", value: app.downloads.isEmpty ? "—" : app.downloads)
                         Spacer()
-                        metricItem(title: "Version", value: app.versionString.isEmpty ? "Current" : app.versionString)
+                        metricItem(title: "Version", value: app.versionString.isEmpty ? String(localized: "Current") : app.versionString)
                         if app.sizeBytes > 0 {
                             Spacer()
                             metricItem(title: "Size", value: ByteCountFormatter.string(fromByteCount: app.sizeBytes, countStyle: .file))
@@ -467,7 +467,7 @@ struct PlayAppDetailSheet: View {
         }
     }
 
-    private func metricItem(title: String, value: String) -> some View {
+    private func metricItem(title: LocalizedStringKey, value: String) -> some View {
         VStack(spacing: 4) {
             Text(value)
                 .font(.subheadline.weight(.semibold))

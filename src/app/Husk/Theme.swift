@@ -46,9 +46,9 @@ enum Theme {
 
         var title: String {
             switch self {
-            case .system: return "System"
-            case .light: return "Light"
-            case .dark: return "Dark"
+            case .system: return String(localized: "System")
+            case .light: return String(localized: "Light")
+            case .dark: return String(localized: "Dark")
             }
         }
 
@@ -219,7 +219,7 @@ struct Tag: View {
 
 /// A label and a value on one line, for anything worth reading off.
 struct DetailRow: View {
-    let label: String
+    let label: LocalizedStringKey
     let value: String
     var mono: Bool = true
 
@@ -331,10 +331,10 @@ struct StatusPill: View {
 
 /// What a screen shows when it has nothing to show.
 struct EmptyState: View {
-    let title: String
+    let title: LocalizedStringKey
     let message: String
     let systemImage: String
-    var actionTitle: String? = nil
+    var actionTitle: LocalizedStringKey? = nil
     var action: (() -> Void)? = nil
 
     var body: some View {

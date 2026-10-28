@@ -18,7 +18,7 @@ struct FilesTab: View {
 
     var body: some View {
         NavigationStack(path: $router.files) {
-            DirectoryView(path: Self.root, title: "Files")
+            DirectoryView(path: Self.root, title: String(localized: "Files"))
                 .huskDestination(for: String.self) { path in
                     DirectoryView(path: path,
                                   title: (path as NSString).lastPathComponent)
@@ -66,7 +66,7 @@ struct DirectoryView: View {
             } else if let failure {
                 EmptyState(title: "Cannot Read This Folder", message: failure, systemImage: "lock")
             } else if entries.isEmpty {
-                EmptyState(title: "Empty", message: "Nothing is in this folder yet.",
+                EmptyState(title: "Empty", message: String(localized: "Nothing is in this folder yet."),
                            systemImage: "folder", actionTitle: "Import Files",
                            action: { showImportSheet = true })
             }
@@ -221,8 +221,7 @@ struct ImportSheet: View {
                         .font(.system(size: 34, weight: .light))
                         .foregroundStyle(Color.accentColor)
                     Text("Import Files").font(.headline)
-                    Text("They go to \((destination as NSString).lastPathComponent). "
-                       + "Unmodified APKs install from here too.")
+                    Text("They go to \((destination as NSString).lastPathComponent). Unmodified APKs install from here too.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)

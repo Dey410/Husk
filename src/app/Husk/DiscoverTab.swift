@@ -19,7 +19,7 @@ struct DiscoverView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if manager.sources.isEmpty {
                 EmptyState(title: "No Repositories",
-                           message: "Add a source to start discovering apps.",
+                           message: String(localized: "Add a source to start discovering apps."),
                            systemImage: "tray",
                            actionTitle: "Add Source",
                            action: { showingAddSource = true })

@@ -36,7 +36,7 @@ enum PlatformFilter: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .all: return "All"
+        case .all: return String(localized: "All")
         case .android: return "Android"
         case .ps4: return "PS4"
         }
@@ -56,10 +56,10 @@ struct ItemStatus: Equatable {
     let label: String
     let color: Color
 
-    static let plays = ItemStatus(label: "Plays", color: .green)
-    static let opens = ItemStatus(label: "Opens", color: .orange)
-    static let broken = ItemStatus(label: "Broken", color: .red)
-    static let protected = ItemStatus(label: "Protected", color: .gray)
+    static let plays = ItemStatus(label: String(localized: "Plays"), color: .green)
+    static let opens = ItemStatus(label: String(localized: "Opens"), color: .orange)
+    static let broken = ItemStatus(label: String(localized: "Broken"), color: .red)
+    static let protected = ItemStatus(label: String(localized: "Protected"), color: .gray)
 }
 
 extension LibraryItem {
@@ -69,7 +69,7 @@ extension LibraryItem {
     var platformName: String {
         switch self {
         case .ps4: return "PlayStation 4"
-        case .app: return "Android · Emulator"
+        case .app: return String(localized: "Android · Emulator")
         case .android: return "Android"
         case .game: return "Android"
         }
@@ -98,8 +98,8 @@ extension LibraryItem {
         guard let date = lastUsed else { return nil }
         let rel = RelativeDateTimeFormatter()
         rel.unitsStyle = .full
-        let ago = date.timeIntervalSinceNow > -60 ? "just now" : rel.localizedString(for: date, relativeTo: Date())
-        return (isGame ? "Last played " : "Last opened ") + ago
+        let ago = date.timeIntervalSinceNow > -60 ? String(localized: "just now") : rel.localizedString(for: date, relativeTo: Date())
+        return isGame ? String(localized: "Last played \(ago)") : String(localized: "Last opened \(ago)")
     }
 
     /// When it was added to Husk, from its folder: what "Recently added" sorts by. Read once per item and kept, since Home

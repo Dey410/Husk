@@ -138,8 +138,10 @@ struct ContentView: View {
             Button("Start") { startFromLibrary() }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Full Android emulation is experimental. It is slow, takes minutes to start, and can freeze or crash Husk. "
-               + "Games and apps run much better in the Translation Layer.")
+            Text("""
+                 Full Android emulation is experimental. It is slow, takes minutes to start, and can freeze or crash Husk. \
+                 Games and apps run much better in the Translation Layer.
+                 """)
         }
         // A game that ended Husk last time: say so, with its report.
         .sheet(item: Binding(get: { showOnboarding ? nil : crash.pending }, set: { crash.pending = $0 }),
@@ -343,8 +345,8 @@ struct ContentView: View {
                 HuskLog.log("jit", "refusing to start QEMU: no trap servicer is "
                                  + "answering and MAP_JIT does not execute here")
                 // Said on screen too: a Start button that silently does nothing reads as a hang (#122).
-                host.say("Android can't start without JIT",
-                         JITBootstrap.lastFailure ?? "Husk could not get executable memory. Turn JIT on again (Settings > JIT) and retry.",
+                host.say(String(localized: "Android can't start without JIT"),
+                         JITBootstrap.lastFailure ?? String(localized: "Husk could not get executable memory. Turn JIT on again (Settings > JIT) and retry."),
                          good: false)
                 booting = false
                 return
@@ -425,7 +427,7 @@ struct GuestScreenView: View {
                     ProgressView(value: Double(runner.bootProgress), total: 100)
                         .progressViewStyle(.linear)
                         .frame(width: 200)
-                    Text(runner.setupMessage ?? "Starting Android…")
+                    Text(runner.setupMessage ?? String(localized: "Starting Android…"))
                         .font(.caption2).foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
@@ -664,8 +666,7 @@ struct ControlsSheet: View {
                     row("computermouse", "Mouse", on: false, available: false)
                 }
 
-                Text("Touch always works. A gamepad and a pointer are not wired "
-                   + "through to Android yet.")
+                Text("Touch always works. A gamepad and a pointer are not wired through to Android yet.")
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textDim)
                     .multilineTextAlignment(.center)
@@ -677,7 +678,7 @@ struct ControlsSheet: View {
         }
     }
 
-    private func row(_ icon: String, _ title: String,
+    private func row(_ icon: String, _ title: LocalizedStringKey,
                      on: Bool, available: Bool) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)

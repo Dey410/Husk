@@ -12,8 +12,8 @@ extension TLReport {
     /// What runs it, in words.
     var runnerName: String {
         if runsOnNativeRuntime { return nativeEngineName }
-        if let web = webKind { return "\(web.name) (web app)" }
-        return canRun ? "Java (Husk's interpreter)" : "None"
+        if let web = webKind { return String(localized: "\(web.name) (web app)") }
+        return canRun ? String(localized: "Java (Husk's interpreter)") : String(localized: "None")
     }
 }
 
@@ -54,9 +54,9 @@ struct TLTechnicalView: View {
     var body: some View {
         List {
             Section("Runtime") {
-                row("Runs With", report?.runnerName ?? "Not scanned")
-                row("Package", app.packageName ?? "—", mono: true)
-                row("Architectures", report.map { $0.abis.isEmpty ? "None (Java only)" : $0.abis.joined(separator: ", ") } ?? "—")
+                row(String(localized: "Runs With"), report?.runnerName ?? String(localized: "Not scanned"))
+                row(String(localized: "Package"), app.packageName ?? "—", mono: true)
+                row(String(localized: "Architectures"), report.map { $0.abis.isEmpty ? String(localized: "None (Java only)") : $0.abis.joined(separator: ", ") } ?? "—")
                 if let summary = report?.displaySummary {
                     Text(summary).font(.footnote).foregroundStyle(.secondary)
                 }
@@ -67,10 +67,11 @@ struct TLTechnicalView: View {
                     row((apk as NSString).lastPathComponent, size(of: apk), mono: true)
                 }
                 if let r = report {
-                    row("Java Code", r.dexCount == 0 ? "None" : "\(r.dexCount) DEX file\(r.dexCount == 1 ? "" : "s"), \(bytes(r.dexBytes))")
-                    row("Android Libraries Used", "\(r.systemLibraries.count)")
+                    row(String(localized: "Java Code"),
+                        r.dexCount == 0 ? String(localized: "None") : String(localized: "\(r.dexCount) DEX files, \(bytes(r.dexBytes))"))
+                    row(String(localized: "Android Libraries Used"), "\(r.systemLibraries.count)")
                 }
-                row("Saved Data", dataSize)
+                row(String(localized: "Saved Data"), dataSize)
             }
 
             if !arm64.isEmpty {
@@ -132,7 +133,7 @@ struct TLTechnicalView: View {
                 return (text, total)
             }.value
             log = text
-            dataSize = total == 0 ? "Nothing yet" : bytes(total)
+            dataSize = total == 0 ? String(localized: "Nothing yet") : bytes(total)
         }
         .sheet(isPresented: $sharing) { ShareSheet(items: [logURL]) }
     }
