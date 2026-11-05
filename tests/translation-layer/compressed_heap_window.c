@@ -20,8 +20,12 @@ kern_return_t bounded_map(vm_map_t t,vm_address_t*a,vm_size_t s,vm_address_t m,i
  }
  return KERN_NO_SPACE;
 }
+/* Anonymous mappings come from the window too, as all of a process's do; 4 GiB or more is refused, as on a phone. */
 static void *bounded_mmap(void*a,size_t n,int p,int f,int fd,off_t off){
- if(n>=0x100000000ULL && (f&MAP_ANON) && !(f&MAP_FIXED)){errno=ENOMEM;return MAP_FAILED;}
- return mmap(a,n,p,f,fd,off);
+ if(!(f&MAP_ANON) || (f&MAP_FIXED))return mmap(a,n,p,f,fd,off);
+ if(n>=0x100000000ULL){errno=ENOMEM;return MAP_FAILED;}
+ vm_address_t at=0;
+ if(bounded_map(mach_task_self(),&at,n,0,VM_FLAGS_ANYWHERE,MACH_PORT_NULL,0,FALSE,p,VM_PROT_ALL,VM_INHERIT_COPY)!=KERN_SUCCESS){errno=ENOMEM;return MAP_FAILED;}
+ return (void*)at;
 }
 __attribute__((used,section("__DATA,__interpose"))) static const struct{const void*replacement;const void*original;} hooks[]={ {bounded_map,vm_map},{bounded_mmap,mmap} };

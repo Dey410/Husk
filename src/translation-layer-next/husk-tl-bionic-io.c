@@ -1222,13 +1222,19 @@ void husk_prepare_compressed_heap(void)
     }
     pthread_mutex_unlock(&g_compressed_heap_lock);
 }
-void husk_release_unused_compressed_heap(void)
+/* Whether there was an unused reservation to give back. */
+static bool compressed_heap_give_back(void)
 {
+    bool given = false;
     pthread_mutex_lock(&g_compressed_heap_lock);
-    if (g_compressed_heap && vm_deallocate(mach_task_self(), g_compressed_heap, PHANTOM_HALF) == KERN_SUCCESS)
+    if (g_compressed_heap && vm_deallocate(mach_task_self(), g_compressed_heap, PHANTOM_HALF) == KERN_SUCCESS) {
         g_compressed_heap = 0;
+        given = true;
+    }
     pthread_mutex_unlock(&g_compressed_heap_lock);
+    return given;
 }
+void husk_release_unused_compressed_heap(void) { compressed_heap_give_back(); }
 static bool compressed_heap_request(size_t len)
 {
     /* V8 asks for 8 GiB; Dart omits the final host page from that request. */
@@ -1469,6 +1475,15 @@ static void *b_mmap(void *addr, size_t len, int prot, int flags, int fd, long of
     void *r = refuse || (force_phantom && compressed_heap_request(len) && prot == 0 && (flags & 0x20) && !(flags & 0x10)) ? MAP_FAILED
             : shifted ? shifted_file_map(addr, len, prot_filter(prot, "mmap"), df, fd, off)
             : mmap(addr, len, prot_filter(prot, "mmap"), df, (flags & 0x20) ? -1 : fd, off);
+    /* The 4 GiB kept for a V8 or Dart heap (husk_prepare_compressed_heap) is a guess about the engine. In a process short of
+     * address space (a sideloaded install) it is most of what there is: Unity's first 512 MiB heap was refused with it held. So
+     * the first ordinary anonymous mapping refused for want of room means the engine is something else, and gets the space. */
+    if (r == MAP_FAILED && errno == ENOMEM && !refuse && (flags & 0x20) && !(flags & 0x10) && !compressed_heap_request(len)
+        && compressed_heap_give_back()) {
+        tl_log_line("mm: %#zx bytes refused; the 4 GiB kept for a V8/Dart heap is given back for them", len);
+        errno = 0;
+        r = mmap(addr, len, prot_filter(prot, "mmap"), df, -1, off);
+    }
     if (r == MAP_FAILED && (errno == ENOMEM || force_phantom) && prot == 0 && (flags & 0x20) && !(flags & 0x10)) { r = phantom_reserve(len); if (r != MAP_FAILED) errno = 0; }
     TL_ERRNO_END();
     /* a file mapped executable (libffi's trampolines: its own library's code page, or a temporary file holding a copy): a phone

@@ -10,3 +10,4 @@ clang -O1 -ffunction-sections -fdata-sections -I"$ROOT/src/translation-layer-nex
   "$ROOT/tests/translation-layer/compressed_heap.c" -Wl,-dead_strip -Wl,-undefined,dynamic_lookup -o "$OUT/test"
 DYLD_INSERT_LIBRARIES="$OUT/window.dylib" "$OUT/test" late
 DYLD_INSERT_LIBRARIES="$OUT/window.dylib" "$OUT/test"
+DYLD_INSERT_LIBRARIES="$OUT/window.dylib" "$OUT/test" giveback
